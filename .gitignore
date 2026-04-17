@@ -11,6 +11,7 @@ build/
 .env
 
 # Data — le duckdb ne va pas sur GitHub (trop lourd, regénérable)
+data/
 data/*.duckdb
 data/*.parquet
 data/*.csv
@@ -27,3 +28,4 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+data/*.json
