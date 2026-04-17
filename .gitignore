@@ -29,3 +29,4 @@ Thumbs.db
 .vscode/
 .idea/
 data/*.json
+data/gcp_skus_raw.json
