@@ -30,3 +30,5 @@ Thumbs.db
 .idea/
 data/*.json
 data/gcp_skus_raw.json
+data/azure_instances__raw.json
+data/azure_instances_raw.json
