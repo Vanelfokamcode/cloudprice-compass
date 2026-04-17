@@ -1,0 +1,7 @@
+httpx
+duckdb
+dbt-duckdb
+fastapi
+uvicorn
+dagster
+python-dotenv
