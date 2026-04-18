@@ -12,7 +12,7 @@ build/
 
 # Data — le duckdb ne va pas sur GitHub (trop lourd, regénérable)
 data/
-data/*.duckdb
+
 data/*.parquet
 data/*.csv
 
