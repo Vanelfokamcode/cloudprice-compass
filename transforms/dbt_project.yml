@@ -1,0 +1,14 @@
+name: 'compass'
+version: '1.0.0'
+profile: 'compass'
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  compass:
+    staging:
+      materialized: view
+    marts:
+      materialized: table

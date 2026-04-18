@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: main
+    tables:
+      - name: raw_aws_instances
+        description: "Instances EC2 AWS depuis instances.vantage.sh"
+      - name: raw_gcp_instances
+        description: "Instances Compute Engine GCP reconstituées depuis Cloud Billing API"
+      - name: raw_azure_instances
+        description: "VMs Azure depuis Retail Prices API"

@@ -1,0 +1,6 @@
+compass:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /home/vanel/cloudprice-compass/data/compass.duckdb
