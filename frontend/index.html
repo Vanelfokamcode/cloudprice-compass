@@ -4,19 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CloudPrice Compass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #0f1117;
-    --surface:  #1a1d2e;
-    --border:   #2a2d3e;
-    --text:     #e2e8f0;
-    --muted:    #64748b;
+    --bg:       #080b10;
+    --surface:  #0e1219;
+    --surface2: #141923;
+    --border:   #1e2535;
+    --border2:  #2a3347;
+    --text:     #d4dce8;
+    --muted:    #4a5568;
+    --muted2:   #6b7c93;
     --aws:      #ff9900;
     --gcp:      #4285f4;
-    --azure:    #0078d4;
-    --accent:   #6366f1;
-    --green:    #10b981;
-    --font:     'IBM Plex Mono', monospace;
+    --azure:    #50b0f8;
+    --accent:   #38bdf8;
+    --green:    #34d399;
+    --purple:   #a78bfa;
+    --mono:     'IBM Plex Mono', monospace;
+    --sans:     'IBM Plex Sans', sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,261 +31,371 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font);
+    font-family: var(--mono);
     font-size: 13px;
     min-height: 100vh;
   }
 
-  /* --- Header --- */
+  /* ── HEADER ── */
   header {
-    border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
   }
 
   .logo {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: .05em;
+    letter-spacing: .08em;
+    color: var(--text);
   }
-
   .logo span { color: var(--accent); }
 
   .stats-bar {
     display: flex;
     gap: 1.5rem;
-    color: var(--muted);
     font-size: 11px;
+    color: var(--muted2);
   }
-
   .stats-bar strong { color: var(--text); }
 
-  /* --- Search panel --- */
-  .search-panel {
+  .provider-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 2rem 2rem 1.5rem;
     border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .hero-title {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: .5rem;
+  }
+  .hero-title span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 12px;
+    color: var(--muted2);
+    line-height: 1.7;
+    font-family: var(--sans);
+    max-width: 520px;
+  }
+
+  .use-case-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1rem;
+  }
+
+  .uc-pill {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    color: var(--muted2);
+    letter-spacing: .04em;
+  }
+  .uc-pill strong { color: var(--accent); font-weight: 500; }
+
+  .hero-right {
+    text-align: right;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+    padding-top: .25rem;
+  }
+  .hero-right span {
+    display: block;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: .25rem;
+  }
+
+  /* ── SEARCH PANEL ── */
+  .search-panel {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .75rem 1rem;
     align-items: end;
   }
 
   .field label {
     display: block;
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: .08em;
+    font-size: 9px;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    color: var(--muted2);
+    margin-bottom: 5px;
   }
 
   .field input,
   .field select {
     width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
     color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 10px;
     outline: none;
     transition: border-color .15s;
+    appearance: none;
   }
-
   .field input:focus,
   .field select:focus { border-color: var(--accent); }
+  .field select { cursor: pointer; }
+  .field select option { background: var(--surface2); }
 
-  .field select option { background: var(--surface); }
+  .uc-hint {
+    font-size: 9px;
+    color: var(--accent);
+    margin-top: 4px;
+    min-height: 12px;
+    letter-spacing: .02em;
+  }
 
-  /* Checkbox providers */
-  .providers {
+  .providers-field { display: flex; flex-direction: column; }
+
+  .provider-toggles {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 6px;
   }
 
-  .provider-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
+  .ptoggle {
+    flex: 1;
+    padding: 7px 4px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: var(--bg);
     color: var(--muted);
-    font-family: var(--font);
-    font-size: 11px;
-    cursor: pointer;
-    transition: all .15s;
-    letter-spacing: .05em;
-  }
-
-  .provider-btn.active-aws   { border-color: var(--aws);   color: var(--aws); }
-  .provider-btn.active-gcp   { border-color: var(--gcp);   color: var(--gcp); }
-  .provider-btn.active-azure { border-color: var(--azure); color: var(--azure); }
-
-  .search-btn {
-    width: 100%;
-    padding: 9px;
-    background: var(--accent);
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    font-family: var(--font);
-    font-size: 13px;
+    font-family: var(--mono);
+    font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     letter-spacing: .05em;
+    text-align: center;
+    transition: all .15s;
+  }
+  .ptoggle.on-aws   { border-color: var(--aws);   color: var(--aws);   background: rgba(255,153,0,.08); }
+  .ptoggle.on-gcp   { border-color: var(--gcp);   color: var(--gcp);   background: rgba(66,133,244,.08); }
+  .ptoggle.on-azure { border-color: var(--azure); color: var(--azure); background: rgba(80,176,248,.08); }
+
+  .search-btn {
+    width: 100%;
+    padding: 8px;
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .06em;
     transition: opacity .15s;
   }
-
   .search-btn:hover { opacity: .85; }
+  .search-btn:active { opacity: .7; }
 
-  /* --- Results --- */
-  .results-header {
-    padding: .75rem 2rem;
+  /* ── RESULTS HEADER ── */
+  .results-meta {
+    padding: .6rem 2rem;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--muted);
-    font-size: 11px;
+    font-size: 10px;
+    color: var(--muted2);
+    background: var(--surface);
   }
+  .results-meta strong { color: var(--text); }
+  .results-meta .sort-hint { color: var(--muted); font-size: 9px; letter-spacing: .04em; }
 
-  .results-header strong { color: var(--text); }
-
+  /* ── GRID ── */
   .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1px;
     background: var(--border);
-    border-top: none;
   }
 
-  /* --- Instance card --- */
+  /* ── CARD ── */
   .card {
     background: var(--bg);
-    padding: 1.25rem 1.5rem;
+    padding: 1.1rem 1.35rem;
     cursor: pointer;
     transition: background .1s;
     position: relative;
+    user-select: none;
   }
-
   .card:hover { background: var(--surface); }
+  .card.selected { background: var(--surface2); outline: 1px solid var(--accent); outline-offset: -1px; }
 
-  .card-top {
+  .card-head {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: .75rem;
+    margin-bottom: .6rem;
   }
 
-  .instance-name {
-    font-size: 14px;
+  .inst-name {
+    font-size: 13px;
     font-weight: 600;
     color: var(--text);
     letter-spacing: .02em;
   }
 
-  .provider-badge {
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 4px;
+  .pbadge {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
     font-weight: 600;
-    letter-spacing: .06em;
+    letter-spacing: .07em;
+    flex-shrink: 0;
   }
-
-  .badge-aws   { background: rgba(255,153,0,.15);   color: var(--aws); }
-  .badge-gcp   { background: rgba(66,133,244,.15);  color: var(--gcp); }
-  .badge-azure { background: rgba(0,120,212,.15);   color: var(--azure); }
+  .pbadge-aws   { background: rgba(255,153,0,.12);  color: var(--aws); }
+  .pbadge-gcp   { background: rgba(66,133,244,.12); color: var(--gcp); }
+  .pbadge-azure { background: rgba(80,176,248,.12); color: var(--azure); }
 
   .card-specs {
     display: flex;
-    gap: 1rem;
-    color: var(--muted);
+    gap: .75rem;
     font-size: 11px;
-    margin-bottom: .75rem;
+    color: var(--muted2);
+    margin-bottom: .6rem;
+    flex-wrap: wrap;
   }
 
-  .card-specs span { display: flex; align-items: center; gap: 4px; }
+  .spec { display: flex; align-items: center; gap: 3px; }
+
+  .cat-tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    color: var(--muted);
+    letter-spacing: .03em;
+  }
 
   .card-price {
     display: flex;
-    align-items: baseline;
+    align-items: flex-end;
     justify-content: space-between;
-    margin-top: .5rem;
-    padding-top: .75rem;
+    padding-top: .6rem;
     border-top: 1px solid var(--border);
+    margin-top: .25rem;
   }
 
   .price-main {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 17px;
+    font-weight: 600;
     color: var(--green);
+    line-height: 1;
+  }
+  .price-main small {
+    font-size: 10px;
+    color: var(--muted2);
+    font-weight: 400;
+    margin-left: 2px;
   }
 
   .price-monthly {
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 10px;
+    color: var(--muted2);
+    margin-top: 3px;
   }
 
-  .savings-badge {
-    font-size: 10px;
+  .savings-pill {
+    font-size: 9px;
     padding: 2px 7px;
-    border-radius: 4px;
-    background: rgba(16,185,129,.15);
+    background: rgba(52,211,153,.1);
     color: var(--green);
+    border-radius: 3px;
+    font-weight: 500;
   }
 
-  .category-tag {
-    font-size: 10px;
-    color: var(--muted);
-    padding: 2px 7px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+  /* Best value badge */
+  .best-badge {
+    position: absolute;
+    top: 0; left: 0;
+    font-size: 8px;
+    padding: 2px 8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+    letter-spacing: .08em;
+    border-bottom-right-radius: 4px;
   }
 
-  /* --- Empty / loading states --- */
-  .state-msg {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--muted);
+  /* ── EMPTY / LOADING ── */
+  .state {
     grid-column: 1 / -1;
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--muted);
   }
+  .state .state-title { font-size: 14px; margin-bottom: .5rem; color: var(--muted2); }
+  .state p { font-size: 11px; line-height: 1.7; }
 
-  .state-msg p { margin-top: .5rem; font-size: 11px; }
-
-  /* --- Compare bar --- */
-  .compare-bar {
+  /* ── COMPARE BAR ── */
+  .cbar {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: var(--surface);
+    background: var(--surface2);
     border-top: 1px solid var(--accent);
     padding: .75rem 2rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    transform: translateY(100%);
-    transition: transform .2s;
+    transform: translateY(110%);
+    transition: transform .2s ease;
     z-index: 100;
   }
+  .cbar.up { transform: translateY(0); }
 
-  .compare-bar.visible { transform: translateY(0); }
+  .cbar-label {
+    font-size: 10px;
+    color: var(--muted2);
+    white-space: nowrap;
+  }
 
-  .compare-slots { display: flex; gap: .5rem; flex: 1; flex-wrap: wrap; }
+  .cbar-slots { display: flex; gap: .5rem; flex: 1; flex-wrap: wrap; }
 
-  .compare-slot {
-    padding: 4px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: 11px;
+  .cslot {
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 3px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    font-size: 11px;
   }
-
-  .compare-slot button {
+  .cslot button {
     background: none;
     border: none;
     color: var(--muted);
@@ -287,88 +404,108 @@
     line-height: 1;
     padding: 0;
   }
+  .cslot button:hover { color: var(--text); }
 
-  .compare-btn {
-    padding: 6px 16px;
+  .cbar-compare {
+    padding: 6px 18px;
     background: var(--accent);
     border: none;
-    border-radius: 6px;
-    color: #fff;
-    font-family: var(--font);
-    font-size: 12px;
+    border-radius: 4px;
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: 600;
+    letter-spacing: .06em;
+    white-space: nowrap;
   }
+  .cbar-compare:disabled { opacity: .4; cursor: default; }
 
-  /* --- Compare modal --- */
-  .modal-overlay {
+  /* ── MODAL ── */
+  .overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.7);
+    background: rgba(0,0,0,.75);
     z-index: 200;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
   }
-
-  .modal-overlay.open { display: flex; }
+  .overlay.open { display: flex; }
 
   .modal {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 90%;
-    max-width: 800px;
-    max-height: 80vh;
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 85vh;
     overflow-y: auto;
+    padding: 1.5rem;
   }
 
-  .modal-header {
+  .modal-head {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.25rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
   }
-
+  .modal-head h2 { font-size: 13px; font-weight: 600; letter-spacing: .04em; }
   .modal-close {
     background: none;
     border: none;
-    color: var(--muted);
+    color: var(--muted2);
     font-size: 20px;
     cursor: pointer;
+    line-height: 1;
   }
+  .modal-close:hover { color: var(--text); }
 
-  .compare-table {
+  .ctable {
     width: 100%;
     border-collapse: collapse;
     font-size: 12px;
   }
-
-  .compare-table th {
+  .ctable th {
     text-align: left;
-    padding: 8px 12px;
+    padding: 7px 12px;
     border-bottom: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
-    letter-spacing: .06em;
+    letter-spacing: .08em;
+    color: var(--muted2);
+    font-weight: 500;
   }
-
-  .compare-table td {
+  .ctable td {
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .ctable tr:last-child td { border-bottom: none; }
+  .ctable tr:hover td { background: var(--surface2); }
+
+  .row-label {
+    color: var(--muted2);
+    font-size: 10px;
+    letter-spacing: .04em;
+    white-space: nowrap;
   }
 
-  .compare-table tr:last-child td { border-bottom: none; }
+  .val-best { color: var(--green); font-weight: 600; }
+  .val-worst { color: var(--muted2); }
 
-  .best { color: var(--green); font-weight: 600; }
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <header>
   <div class="logo">cloud<span>price</span>.compass</div>
   <div class="stats-bar" id="stats-bar">
@@ -376,6 +513,33 @@
   </div>
 </header>
 
+<!-- ── HERO ── -->
+<div class="hero">
+  <div>
+    <div class="hero-title">
+      Trouve la meilleure instance cloud<br>
+      pour <span>ton besoin exact</span>.
+    </div>
+    <div class="hero-sub">
+      Compare AWS, GCP et Azure en temps réel sur 1 000+ instances.
+      Le <strong>value score</strong> s'adapte à ton use case —
+      PostgreSQL favorise la RAM, Web server favorise le CPU.
+      Clique sur 2 à 4 cartes pour une comparaison détaillée.
+    </div>
+    <div class="use-case-pills">
+      <span class="uc-pill"><strong>postgres</strong> → RAM ×4</span>
+      <span class="uc-pill"><strong>redis</strong> → RAM ×9</span>
+      <span class="uc-pill"><strong>web</strong> → CPU ×1.4</span>
+      <span class="uc-pill"><strong>ml</strong> → CPU ×1.2</span>
+      <span class="uc-pill"><strong>spark</strong> → équilibré</span>
+    </div>
+  </div>
+  <div class="hero-right" id="hero-counts">
+    <span>—</span>instances indexées
+  </div>
+</div>
+
+<!-- ── SEARCH PANEL ── -->
 <div class="search-panel">
   <div class="field">
     <label>RAM min (GB)</label>
@@ -395,7 +559,7 @@
   </div>
   <div class="field">
     <label>Use case</label>
-    <select id="use_case">
+    <select id="use_case" onchange="onUseCase()">
       <option value="general">General</option>
       <option value="postgres">PostgreSQL</option>
       <option value="redis">Redis / Cache</option>
@@ -403,44 +567,49 @@
       <option value="ml">Machine learning</option>
       <option value="spark">Spark / Data</option>
     </select>
+    <div class="uc-hint" id="uc-hint"></div>
   </div>
-  <div class="field">
+  <div class="field providers-field">
     <label>Providers</label>
-    <div class="providers">
-      <button class="provider-btn active-aws"   data-p="aws">AWS</button>
-      <button class="provider-btn active-gcp"   data-p="gcp">GCP</button>
-      <button class="provider-btn active-azure" data-p="azure">Azure</button>
+    <div class="provider-toggles">
+      <button class="ptoggle on-aws"   data-p="aws"   onclick="toggleProvider(this)">AWS</button>
+      <button class="ptoggle on-gcp"   data-p="gcp"   onclick="toggleProvider(this)">GCP</button>
+      <button class="ptoggle on-azure" data-p="azure" onclick="toggleProvider(this)">Azure</button>
     </div>
   </div>
   <div class="field">
     <label>&nbsp;</label>
-    <button class="search-btn" onclick="doSearch()">Rechercher</button>
+    <button class="search-btn" onclick="doSearch()">→ Rechercher</button>
   </div>
 </div>
 
-<div class="results-header" id="results-header">
-  <span>Résultats</span>
+<!-- ── RESULTS META ── -->
+<div class="results-meta" id="results-meta">
+  <span>Prêt</span>
+  <span class="sort-hint">TRI PAR VALUE SCORE ↑</span>
 </div>
 
+<!-- ── GRID ── -->
 <div class="results-grid" id="results-grid">
-  <div class="state-msg">
-    <div>Configure ta recherche et lance.</div>
-    <p>RAM, vCPU, budget, use case — on trouve la meilleure instance.</p>
+  <div class="state">
+    <div class="state-title">Configure ta recherche.</div>
+    <p>RAM, vCPU, budget, use case<br>→ on trouve la meilleure instance.</p>
   </div>
 </div>
 
-<!-- Compare bar -->
-<div class="compare-bar" id="compare-bar">
-  <div class="compare-slots" id="compare-slots"></div>
-  <button class="compare-btn" onclick="openCompare()">Comparer</button>
+<!-- ── COMPARE BAR ── -->
+<div class="cbar" id="cbar">
+  <span class="cbar-label">COMPARER</span>
+  <div class="cbar-slots" id="cbar-slots"></div>
+  <button class="cbar-compare" onclick="openModal()" id="cbar-btn">Voir comparaison →</button>
 </div>
 
-<!-- Compare modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeCompare(event)">
+<!-- ── MODAL ── -->
+<div class="overlay" id="overlay" onclick="onOverlayClick(event)">
   <div class="modal">
-    <div class="modal-header">
-      <span style="font-size:14px;font-weight:600">Comparaison détaillée</span>
-      <button class="modal-close" onclick="closeCompare()">×</button>
+    <div class="modal-head">
+      <h2>Comparaison détaillée</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div id="modal-body"></div>
   </div>
@@ -448,40 +617,67 @@
 
 <script>
 const API = 'http://localhost:8000';
-let compareSet = new Set();
-let activeProviders = new Set(['aws', 'gcp', 'azure']);
+const activeProviders = new Set(['aws','gcp','azure']);
+const compareSet = new Map(); // id → {instance_type, provider}
 
-// --- Stats ---
-async function loadStats() {
-  const r = await fetch(`${API}/stats`);
-  const d = await r.json();
-  document.getElementById('stats-bar').innerHTML = `
-    <span><strong>${d.total_instances.toLocaleString()}</strong> instances</span>
-    <span>AWS <strong>${d.by_provider.aws}</strong></span>
-    <span>GCP <strong>${d.by_provider.gcp}</strong></span>
-    <span>Azure <strong>${d.by_provider.azure}</strong></span>
-  `;
+const UC_HINTS = {
+  general:  'Poids équilibré — CPU 50% / RAM 50%',
+  postgres: 'RAM prioritaire — idéal bases de données',
+  redis:    'RAM maximale — cache in-memory',
+  web:      'CPU favorisé — requêtes concurrentes',
+  ml:       'CPU important — inférence et entraînement',
+  spark:    'Équilibré — calcul distribué',
+};
+
+/* ── INIT ── */
+async function init() {
+  onUseCase();
+  await loadStats();
+  doSearch();
 }
 
-// --- Provider toggles ---
-document.querySelectorAll('.provider-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const p = btn.dataset.p;
-    if (activeProviders.has(p) && activeProviders.size > 1) {
-      activeProviders.delete(p);
-      btn.classList.remove(`active-${p}`);
-    } else {
-      activeProviders.add(p);
-      btn.classList.add(`active-${p}`);
-    }
-  });
-});
+/* ── STATS ── */
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/stats`);
+    const d = await r.json();
+    const total = d.total_instances;
+    document.getElementById('hero-counts').innerHTML =
+      `<span>${total.toLocaleString()}</span>instances indexées`;
+    document.getElementById('stats-bar').innerHTML = `
+      <span><span class="provider-dot" style="background:var(--aws)"></span>AWS <strong>${d.by_provider.aws || 0}</strong></span>
+      <span><span class="provider-dot" style="background:var(--gcp)"></span>GCP <strong>${d.by_provider.gcp || 0}</strong></span>
+      <span><span class="provider-dot" style="background:var(--azure)"></span>Azure <strong>${d.by_provider.azure || 0}</strong></span>
+    `;
+  } catch(e) {
+    document.getElementById('stats-bar').innerHTML = '<span style="color:var(--muted)">API hors ligne</span>';
+  }
+}
 
-// --- Search ---
+/* ── USE CASE HINT ── */
+function onUseCase() {
+  const uc = document.getElementById('use_case').value;
+  document.getElementById('uc-hint').textContent = UC_HINTS[uc] || '';
+}
+
+/* ── PROVIDER TOGGLE ── */
+function toggleProvider(btn) {
+  const p = btn.dataset.p;
+  if (activeProviders.has(p) && activeProviders.size === 1) return; // garde au moins 1
+  if (activeProviders.has(p)) {
+    activeProviders.delete(p);
+    btn.classList.remove(`on-${p}`);
+  } else {
+    activeProviders.add(p);
+    btn.classList.add(`on-${p}`);
+  }
+}
+
+/* ── SEARCH ── */
 async function doSearch() {
   const grid = document.getElementById('results-grid');
-  const header = document.getElementById('results-header');
-  grid.innerHTML = '<div class="state-msg"><div>Recherche en cours...</div></div>';
+  const meta = document.getElementById('results-meta');
+  grid.innerHTML = '<div class="state"><div class="state-title">Recherche en cours...</div></div>';
 
   const params = new URLSearchParams();
   const ram_min   = document.getElementById('ram_min').value;
@@ -496,85 +692,95 @@ async function doSearch() {
   if (price_max) params.set('price_max', price_max);
   params.set('use_case', use_case);
   params.set('providers', [...activeProviders].join(','));
-  params.set('limit', 40);
+  params.set('limit', 48);
 
-  const r = await fetch(`${API}/search?${params}`);
-  const d = await r.json();
-  const results = d.results;
+  try {
+    const r = await fetch(`${API}/search?${params}`);
+    const d = await r.json();
+    const results = d.results;
 
-  header.innerHTML = `
-    <span><strong>${results.length}</strong> instances trouvées
-    — use case <strong>${use_case}</strong>
-    — RAM ≥ <strong>${ram_min || 0} GB</strong></span>
-    <span style="color:var(--muted);font-size:10px">trié par value score ↑</span>
-  `;
+    if (!results.length) {
+      meta.innerHTML = '<span>Aucun résultat</span><span class="sort-hint">TRI PAR VALUE SCORE ↑</span>';
+      grid.innerHTML = '<div class="state"><div class="state-title">Aucun résultat.</div><p>Assouplit les filtres.</p></div>';
+      return;
+    }
 
-  if (!results.length) {
-    grid.innerHTML = '<div class="state-msg"><div>Aucun résultat.</div><p>Assouplit les filtres.</p></div>';
-    return;
+    meta.innerHTML = `
+      <span><strong>${results.length}</strong> instances — use case <strong>${use_case}</strong> — RAM ≥ <strong>${ram_min||0} GB</strong></span>
+      <span class="sort-hint">TRI PAR VALUE SCORE ↑</span>
+    `;
+
+    grid.innerHTML = results.map((inst, i) => cardHTML(inst, i)).join('');
+
+  } catch(e) {
+    grid.innerHTML = '<div class="state"><div class="state-title">Erreur API.</div><p>uvicorn tourne ?</p></div>';
   }
-
-  grid.innerHTML = results.map(inst => cardHTML(inst)).join('');
 }
 
-// --- Card HTML ---
-function cardHTML(inst) {
-  const badge = `badge-${inst.provider}`;
+/* ── CARD ── */
+function cardHTML(inst, idx) {
   const savings = inst.reserved_savings_pct
-    ? `<span class="savings-badge">-${inst.reserved_savings_pct.toFixed(0)}% reserved</span>`
+    ? `<span class="savings-pill">-${inst.reserved_savings_pct.toFixed(0)}% reserved</span>`
     : '';
-  const selected = compareSet.has(inst.instance_id) ? 'background:var(--surface)' : '';
+  const best = idx === 0
+    ? '<div class="best-badge">BEST VALUE</div>'
+    : '';
+  const isSelected = compareSet.has(inst.instance_id);
 
   return `
-    <div class="card" id="card-${inst.instance_id.replace(':','_')}"
-         style="${selected}"
-         onclick="toggleCompare('${inst.instance_id}', '${inst.instance_type}', '${inst.provider}', this)">
-      <div class="card-top">
-        <div class="instance-name">${inst.instance_type}</div>
-        <span class="provider-badge ${badge}">${inst.provider.toUpperCase()}</span>
+    <div class="card${isSelected ? ' selected' : ''}"
+         id="card-${safeId(inst.instance_id)}"
+         onclick="toggleCompare('${inst.instance_id}','${inst.instance_type}','${inst.provider}')">
+      ${best}
+      <div class="card-head">
+        <div class="inst-name">${inst.instance_type}</div>
+        <span class="pbadge pbadge-${inst.provider}">${inst.provider.toUpperCase()}</span>
       </div>
       <div class="card-specs">
-        <span>${inst.vcpu} vCPU</span>
-        <span>${inst.memory_gb} GB RAM</span>
-        <span class="category-tag">${inst.category}</span>
+        <span class="spec">${inst.vcpu} vCPU</span>
+        <span class="spec">${inst.memory_gb} GB RAM</span>
+        <span class="cat-tag">${inst.category}</span>
       </div>
       <div class="card-price">
         <div>
-          <div class="price-main">$${inst.price_ondemand.toFixed(4)}<span style="font-size:11px;color:var(--muted)">/h</span></div>
+          <div class="price-main">$${inst.price_ondemand.toFixed(4)}<small>/h</small></div>
           <div class="price-monthly">~$${inst.monthly_cost_usd.toFixed(0)}/mois</div>
         </div>
-        <div style="text-align:right">${savings}</div>
+        <div>${savings}</div>
       </div>
     </div>
   `;
 }
 
-// --- Compare logic ---
-function toggleCompare(id, name, provider, el) {
+function safeId(id) { return id.replace(/[^a-z0-9]/gi,'_'); }
+
+/* ── COMPARE ── */
+function toggleCompare(id, type, provider) {
+  const el = document.getElementById(`card-${safeId(id)}`);
   if (compareSet.has(id)) {
     compareSet.delete(id);
-    el.style.background = '';
+    el && el.classList.remove('selected');
   } else {
     if (compareSet.size >= 4) return;
-    compareSet.add(id);
-    el.style.background = 'var(--surface)';
+    compareSet.set(id, { instance_type: type, provider });
+    el && el.classList.add('selected');
   }
-  renderCompareBar();
+  renderCbar();
 }
 
-function renderCompareBar() {
-  const bar = document.getElementById('compare-bar');
-  const slots = document.getElementById('compare-slots');
+function renderCbar() {
+  const cbar  = document.getElementById('cbar');
+  const slots = document.getElementById('cbar-slots');
+  const btn   = document.getElementById('cbar-btn');
 
-  if (compareSet.size === 0) {
-    bar.classList.remove('visible');
-    return;
-  }
+  if (compareSet.size === 0) { cbar.classList.remove('up'); return; }
+  cbar.classList.add('up');
+  btn.disabled = compareSet.size < 2;
 
-  bar.classList.add('visible');
-  slots.innerHTML = [...compareSet].map(id => `
-    <div class="compare-slot">
-      <span>${id.split(':')[1]}</span>
+  slots.innerHTML = [...compareSet.entries()].map(([id, info]) => `
+    <div class="cslot">
+      <span class="pbadge pbadge-${info.provider}">${info.provider.toUpperCase()}</span>
+      <span>${info.instance_type}</span>
       <button onclick="removeCompare('${id}')">×</button>
     </div>
   `).join('');
@@ -582,69 +788,85 @@ function renderCompareBar() {
 
 function removeCompare(id) {
   compareSet.delete(id);
-  const cardId = `card-${id.replace(':','_')}`;
-  const el = document.getElementById(cardId);
-  if (el) el.style.background = '';
-  renderCompareBar();
+  const el = document.getElementById(`card-${safeId(id)}`);
+  el && el.classList.remove('selected');
+  renderCbar();
 }
 
-async function openCompare() {
+/* ── MODAL ── */
+async function openModal() {
   if (compareSet.size < 2) return;
-  const ids = [...compareSet].join(',');
-  const r = await fetch(`${API}/compare?ids=${ids}`);
-  const d = await r.json();
-  const instances = d.results;
+  const ids = [...compareSet.keys()].join(',');
 
-  const metrics = [
-    ['Provider',      i => `<span class="provider-badge badge-${i.provider}">${i.provider.toUpperCase()}</span>`],
-    ['Instance',      i => i.instance_type],
-    ['vCPU',          i => i.vcpu],
-    ['RAM (GB)',       i => i.memory_gb],
-    ['Catégorie',     i => i.category],
-    ['Prix/heure',    i => `$${i.price_ondemand.toFixed(4)}`],
-    ['Prix/mois',     i => `$${i.monthly_cost_usd.toFixed(0)}`],
-    ['Prix/an',       i => `$${i.yearly_cost_usd.toFixed(0)}`],
-    ['Reserved 1yr',  i => i.price_reserved ? `$${i.price_reserved.toFixed(4)}/h` : '—'],
-    ['Savings %',     i => i.reserved_savings_pct ? `${i.reserved_savings_pct.toFixed(0)}%` : '—'],
-    ['$/vCPU/h',      i => `$${i.price_per_vcpu.toFixed(5)}`],
-    ['$/GB RAM/h',    i => `$${i.price_per_gb_ram.toFixed(5)}`],
-  ];
+  try {
+    const r = await fetch(`${API}/compare?ids=${ids}`);
+    const d = await r.json();
+    const insts = d.results;
 
-  // Trouve le minimum pour price_ondemand — on le met en vert
-  const minPrice = Math.min(...instances.map(i => i.price_ondemand));
+    const metrics = [
+      ['Provider',     i => `<span class="pbadge pbadge-${i.provider}">${i.provider.toUpperCase()}</span>`],
+      ['Instance',     i => `<strong>${i.instance_type}</strong>`],
+      ['vCPU',         i => i.vcpu],
+      ['RAM (GB)',      i => i.memory_gb],
+      ['Catégorie',    i => i.category],
+      ['Prix/heure',   i => `$${i.price_ondemand.toFixed(4)}`, true],
+      ['Prix/mois',    i => `$${i.monthly_cost_usd.toFixed(0)}`, true],
+      ['Prix/an',      i => `$${i.yearly_cost_usd.toFixed(0)}`, true],
+      ['Reserved 1yr', i => i.price_reserved ? `$${i.price_reserved.toFixed(4)}/h` : '—'],
+      ['Savings %',    i => i.reserved_savings_pct ? `${i.reserved_savings_pct.toFixed(0)}%` : '—'],
+      ['$/vCPU/h',     i => `$${i.price_per_vcpu.toFixed(5)}`, true],
+      ['$/GB RAM/h',   i => `$${i.price_per_gb_ram.toFixed(5)}`, true],
+    ];
 
-  const headers = instances.map(i =>
-    `<th>${i.instance_type}<br><span style="color:var(--muted);font-size:10px">${i.provider}</span></th>`
-  ).join('');
+    const minPrice = Math.min(...insts.map(i => i.price_ondemand));
+    const heads = insts.map(i =>
+      `<th>${i.instance_type}<br><span style="color:var(--muted2);font-weight:400">${i.provider}</span></th>`
+    ).join('');
 
-  const rows = metrics.map(([label, fn]) => {
-    const cells = instances.map(i => {
-      const val = fn(i);
-      const isBest = label === 'Prix/heure' && i.price_ondemand === minPrice;
-      return `<td class="${isBest ? 'best' : ''}">${val}</td>`;
+    const rows = metrics.map(([label, fn, isPrice]) => {
+      const vals = insts.map(i => fn(i));
+      // Pour les métriques prix, trouve le meilleur (le plus bas numériquement)
+      let minVal = null;
+      if (isPrice) {
+        const nums = insts.map(i => parseFloat(String(fn(i)).replace(/[$,]/g,'')));
+        minVal = Math.min(...nums.filter(n => !isNaN(n)));
+      }
+      const cells = insts.map((inst, idx) => {
+        const val = vals[idx];
+        let cls = '';
+        if (isPrice) {
+          const num = parseFloat(String(val).replace(/[$,]/g,''));
+          if (!isNaN(num) && num === minVal) cls = 'val-best';
+          else cls = 'val-worst';
+        }
+        return `<td class="${cls}">${val}</td>`;
+      }).join('');
+      return `<tr><td class="row-label">${label}</td>${cells}</tr>`;
     }).join('');
-    return `<tr><th>${label}</th>${cells}</tr>`;
-  }).join('');
 
-  document.getElementById('modal-body').innerHTML = `
-    <table class="compare-table">
-      <thead><tr><th></th>${headers}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
+    document.getElementById('modal-body').innerHTML = `
+      <table class="ctable">
+        <thead><tr><th></th>${heads}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+    document.getElementById('overlay').classList.add('open');
 
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeCompare(e) {
-  if (!e || e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
+  } catch(e) {
+    alert('Erreur lors de la comparaison.');
   }
 }
 
-// --- Init ---
-loadStats();
-doSearch();
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function onOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+/* ── START ── */
+init();
 </script>
 </body>
 </html>
