@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudPrice Compass</title>
+<style>
+  :root {
+    --bg:       #0f1117;
+    --surface:  #1a1d2e;
+    --border:   #2a2d3e;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --aws:      #ff9900;
+    --gcp:      #4285f4;
+    --azure:    #0078d4;
+    --accent:   #6366f1;
+    --green:    #10b981;
+    --font:     'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* --- Header --- */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .05em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .stats-bar strong { color: var(--text); }
+
+  /* --- Search panel --- */
+  .search-panel {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .field label {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .field input:focus,
+  .field select:focus { border-color: var(--accent); }
+
+  .field select option { background: var(--surface); }
+
+  /* Checkbox providers */
+  .providers {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .provider-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: .05em;
+  }
+
+  .provider-btn.active-aws   { border-color: var(--aws);   color: var(--aws); }
+  .provider-btn.active-gcp   { border-color: var(--gcp);   color: var(--gcp); }
+  .provider-btn.active-azure { border-color: var(--azure); color: var(--azure); }
+
+  .search-btn {
+    width: 100%;
+    padding: 9px;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .05em;
+    transition: opacity .15s;
+  }
+
+  .search-btn:hover { opacity: .85; }
+
+  /* --- Results --- */
+  .results-header {
+    padding: .75rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .results-header strong { color: var(--text); }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-top: none;
+  }
+
+  /* --- Instance card --- */
+  .card {
+    background: var(--bg);
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    transition: background .1s;
+    position: relative;
+  }
+
+  .card:hover { background: var(--surface); }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: .75rem;
+  }
+
+  .instance-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: .02em;
+  }
+
+  .provider-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+
+  .badge-aws   { background: rgba(255,153,0,.15);   color: var(--aws); }
+  .badge-gcp   { background: rgba(66,133,244,.15);  color: var(--gcp); }
+  .badge-azure { background: rgba(0,120,212,.15);   color: var(--azure); }
+
+  .card-specs {
+    display: flex;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: .75rem;
+  }
+
+  .card-specs span { display: flex; align-items: center; gap: 4px; }
+
+  .card-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: .5rem;
+    padding-top: .75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .price-main {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .price-monthly {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .savings-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(16,185,129,.15);
+    color: var(--green);
+  }
+
+  .category-tag {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  /* --- Empty / loading states --- */
+  .state-msg {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    grid-column: 1 / -1;
+  }
+
+  .state-msg p { margin-top: .5rem; font-size: 11px; }
+
+  /* --- Compare bar --- */
+  .compare-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--accent);
+    padding: .75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transform: translateY(100%);
+    transition: transform .2s;
+    z-index: 100;
+  }
+
+  .compare-bar.visible { transform: translateY(0); }
+
+  .compare-slots { display: flex; gap: .5rem; flex: 1; flex-wrap: wrap; }
+
+  .compare-slot {
+    padding: 4px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .compare-slot button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .compare-btn {
+    padding: 6px 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  /* --- Compare modal --- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .compare-table th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .compare-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  .best { color: var(--green); font-weight: 600; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class="logo">cloud<span>price</span>.compass</div>
+  <div class="stats-bar" id="stats-bar">
+    <span>chargement...</span>
+  </div>
+</header>
+
+<div class="search-panel">
+  <div class="field">
+    <label>RAM min (GB)</label>
+    <input type="number" id="ram_min" value="16" min="0" step="1">
+  </div>
+  <div class="field">
+    <label>RAM max (GB)</label>
+    <input type="number" id="ram_max" placeholder="illimité" min="0" step="1">
+  </div>
+  <div class="field">
+    <label>vCPU min</label>
+    <input type="number" id="vcpu_min" placeholder="0" min="0">
+  </div>
+  <div class="field">
+    <label>Prix max ($/h)</label>
+    <input type="number" id="price_max" placeholder="illimité" min="0" step="0.01">
+  </div>
+  <div class="field">
+    <label>Use case</label>
+    <select id="use_case">
+      <option value="general">General</option>
+      <option value="postgres">PostgreSQL</option>
+      <option value="redis">Redis / Cache</option>
+      <option value="web">Web server</option>
+      <option value="ml">Machine learning</option>
+      <option value="spark">Spark / Data</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Providers</label>
+    <div class="providers">
+      <button class="provider-btn active-aws"   data-p="aws">AWS</button>
+      <button class="provider-btn active-gcp"   data-p="gcp">GCP</button>
+      <button class="provider-btn active-azure" data-p="azure">Azure</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>&nbsp;</label>
+    <button class="search-btn" onclick="doSearch()">Rechercher</button>
+  </div>
+</div>
+
+<div class="results-header" id="results-header">
+  <span>Résultats</span>
+</div>
+
+<div class="results-grid" id="results-grid">
+  <div class="state-msg">
+    <div>Configure ta recherche et lance.</div>
+    <p>RAM, vCPU, budget, use case — on trouve la meilleure instance.</p>
+  </div>
+</div>
+
+<!-- Compare bar -->
+<div class="compare-bar" id="compare-bar">
+  <div class="compare-slots" id="compare-slots"></div>
+  <button class="compare-btn" onclick="openCompare()">Comparer</button>
+</div>
+
+<!-- Compare modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeCompare(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="font-size:14px;font-weight:600">Comparaison détaillée</span>
+      <button class="modal-close" onclick="closeCompare()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8000';
+let compareSet = new Set();
+let activeProviders = new Set(['aws', 'gcp', 'azure']);
+
+// --- Stats ---
+async function loadStats() {
+  const r = await fetch(`${API}/stats`);
+  const d = await r.json();
+  document.getElementById('stats-bar').innerHTML = `
+    <span><strong>${d.total_instances.toLocaleString()}</strong> instances</span>
+    <span>AWS <strong>${d.by_provider.aws}</strong></span>
+    <span>GCP <strong>${d.by_provider.gcp}</strong></span>
+    <span>Azure <strong>${d.by_provider.azure}</strong></span>
+  `;
+}
+
+// --- Provider toggles ---
+document.querySelectorAll('.provider-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = btn.dataset.p;
+    if (activeProviders.has(p) && activeProviders.size > 1) {
+      activeProviders.delete(p);
+      btn.classList.remove(`active-${p}`);
+    } else {
+      activeProviders.add(p);
+      btn.classList.add(`active-${p}`);
+    }
+  });
+});
+
+// --- Search ---
+async function doSearch() {
+  const grid = document.getElementById('results-grid');
+  const header = document.getElementById('results-header');
+  grid.innerHTML = '<div class="state-msg"><div>Recherche en cours...</div></div>';
+
+  const params = new URLSearchParams();
+  const ram_min   = document.getElementById('ram_min').value;
+  const ram_max   = document.getElementById('ram_max').value;
+  const vcpu_min  = document.getElementById('vcpu_min').value;
+  const price_max = document.getElementById('price_max').value;
+  const use_case  = document.getElementById('use_case').value;
+
+  if (ram_min)   params.set('ram_min', ram_min);
+  if (ram_max)   params.set('ram_max', ram_max);
+  if (vcpu_min)  params.set('vcpu_min', vcpu_min);
+  if (price_max) params.set('price_max', price_max);
+  params.set('use_case', use_case);
+  params.set('providers', [...activeProviders].join(','));
+  params.set('limit', 40);
+
+  const r = await fetch(`${API}/search?${params}`);
+  const d = await r.json();
+  const results = d.results;
+
+  header.innerHTML = `
+    <span><strong>${results.length}</strong> instances trouvées
+    — use case <strong>${use_case}</strong>
+    — RAM ≥ <strong>${ram_min || 0} GB</strong></span>
+    <span style="color:var(--muted);font-size:10px">trié par value score ↑</span>
+  `;
+
+  if (!results.length) {
+    grid.innerHTML = '<div class="state-msg"><div>Aucun résultat.</div><p>Assouplit les filtres.</p></div>';
+    return;
+  }
+
+  grid.innerHTML = results.map(inst => cardHTML(inst)).join('');
+}
+
+// --- Card HTML ---
+function cardHTML(inst) {
+  const badge = `badge-${inst.provider}`;
+  const savings = inst.reserved_savings_pct
+    ? `<span class="savings-badge">-${inst.reserved_savings_pct.toFixed(0)}% reserved</span>`
+    : '';
+  const selected = compareSet.has(inst.instance_id) ? 'background:var(--surface)' : '';
+
+  return `
+    <div class="card" id="card-${inst.instance_id.replace(':','_')}"
+         style="${selected}"
+         onclick="toggleCompare('${inst.instance_id}', '${inst.instance_type}', '${inst.provider}', this)">
+      <div class="card-top">
+        <div class="instance-name">${inst.instance_type}</div>
+        <span class="provider-badge ${badge}">${inst.provider.toUpperCase()}</span>
+      </div>
+      <div class="card-specs">
+        <span>${inst.vcpu} vCPU</span>
+        <span>${inst.memory_gb} GB RAM</span>
+        <span class="category-tag">${inst.category}</span>
+      </div>
+      <div class="card-price">
+        <div>
+          <div class="price-main">$${inst.price_ondemand.toFixed(4)}<span style="font-size:11px;color:var(--muted)">/h</span></div>
+          <div class="price-monthly">~$${inst.monthly_cost_usd.toFixed(0)}/mois</div>
+        </div>
+        <div style="text-align:right">${savings}</div>
+      </div>
+    </div>
+  `;
+}
+
+// --- Compare logic ---
+function toggleCompare(id, name, provider, el) {
+  if (compareSet.has(id)) {
+    compareSet.delete(id);
+    el.style.background = '';
+  } else {
+    if (compareSet.size >= 4) return;
+    compareSet.add(id);
+    el.style.background = 'var(--surface)';
+  }
+  renderCompareBar();
+}
+
+function renderCompareBar() {
+  const bar = document.getElementById('compare-bar');
+  const slots = document.getElementById('compare-slots');
+
+  if (compareSet.size === 0) {
+    bar.classList.remove('visible');
+    return;
+  }
+
+  bar.classList.add('visible');
+  slots.innerHTML = [...compareSet].map(id => `
+    <div class="compare-slot">
+      <span>${id.split(':')[1]}</span>
+      <button onclick="removeCompare('${id}')">×</button>
+    </div>
+  `).join('');
+}
+
+function removeCompare(id) {
+  compareSet.delete(id);
+  const cardId = `card-${id.replace(':','_')}`;
+  const el = document.getElementById(cardId);
+  if (el) el.style.background = '';
+  renderCompareBar();
+}
+
+async function openCompare() {
+  if (compareSet.size < 2) return;
+  const ids = [...compareSet].join(',');
+  const r = await fetch(`${API}/compare?ids=${ids}`);
+  const d = await r.json();
+  const instances = d.results;
+
+  const metrics = [
+    ['Provider',      i => `<span class="provider-badge badge-${i.provider}">${i.provider.toUpperCase()}</span>`],
+    ['Instance',      i => i.instance_type],
+    ['vCPU',          i => i.vcpu],
+    ['RAM (GB)',       i => i.memory_gb],
+    ['Catégorie',     i => i.category],
+    ['Prix/heure',    i => `$${i.price_ondemand.toFixed(4)}`],
+    ['Prix/mois',     i => `$${i.monthly_cost_usd.toFixed(0)}`],
+    ['Prix/an',       i => `$${i.yearly_cost_usd.toFixed(0)}`],
+    ['Reserved 1yr',  i => i.price_reserved ? `$${i.price_reserved.toFixed(4)}/h` : '—'],
+    ['Savings %',     i => i.reserved_savings_pct ? `${i.reserved_savings_pct.toFixed(0)}%` : '—'],
+    ['$/vCPU/h',      i => `$${i.price_per_vcpu.toFixed(5)}`],
+    ['$/GB RAM/h',    i => `$${i.price_per_gb_ram.toFixed(5)}`],
+  ];
+
+  // Trouve le minimum pour price_ondemand — on le met en vert
+  const minPrice = Math.min(...instances.map(i => i.price_ondemand));
+
+  const headers = instances.map(i =>
+    `<th>${i.instance_type}<br><span style="color:var(--muted);font-size:10px">${i.provider}</span></th>`
+  ).join('');
+
+  const rows = metrics.map(([label, fn]) => {
+    const cells = instances.map(i => {
+      const val = fn(i);
+      const isBest = label === 'Prix/heure' && i.price_ondemand === minPrice;
+      return `<td class="${isBest ? 'best' : ''}">${val}</td>`;
+    }).join('');
+    return `<tr><th>${label}</th>${cells}</tr>`;
+  }).join('');
+
+  document.getElementById('modal-body').innerHTML = `
+    <table class="compare-table">
+      <thead><tr><th></th>${headers}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeCompare(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// --- Init ---
+loadStats();
+doSearch();
+</script>
+</body>
+</html>

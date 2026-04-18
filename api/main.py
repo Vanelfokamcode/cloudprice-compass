@@ -1,12 +1,22 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from api.search import search, compare, get_stats, SearchQuery
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 
 app = FastAPI(
     title="CloudPrice Compass API",
     description="Comparateur multi-cloud AWS / GCP / Azure",
     version="0.1.0"
 )
+
+@app.get("/app")
+def frontend():
+    return FileResponse("frontend/index.html")
+
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,7 +54,7 @@ def search_instances(
         vcpu_min=vcpu_min,
         vcpu_max=vcpu_max,
         price_max=price_max,
-        providers=providers.split(","),
+        providers=[p.strip() for p in providers.split(",")],
         category=category,
         use_case=use_case,
         limit=limit,
