@@ -56,27 +56,34 @@ def fetch_all_items() -> list:
     print(f"Cached {len(all_items)} items")
     return all_items
 
+# Specs manuelles pour les instances où le parsing regex échoue
+# Format : armSkuName → {vcpu, memory_gb}
+MANUAL_SPECS = {
+    "Standard_D11_v2":  {"vcpu": 2,  "memory_gb": 14.0},
+    "Standard_D12_v2":  {"vcpu": 4,  "memory_gb": 28.0},
+    "Standard_D13_v2":  {"vcpu": 8,  "memory_gb": 56.0},
+    "Standard_D14_v2":  {"vcpu": 16, "memory_gb": 112.0},
+    "Standard_D15_v2":  {"vcpu": 20, "memory_gb": 140.0},
+    "Standard_DS11_v2": {"vcpu": 2,  "memory_gb": 14.0},
+    "Standard_DS12_v2": {"vcpu": 4,  "memory_gb": 28.0},
+    "Standard_DS13_v2": {"vcpu": 8,  "memory_gb": 56.0},
+    "Standard_DS14_v2": {"vcpu": 16, "memory_gb": 112.0},
+}
+
 def parse_specs_from_sku(arm_sku: str) -> dict | None:
     """
     Parse vcpu et memory_gb depuis le nom ARM Azure.
-    Couvre ~80% des instances standard.
 
-    Convention : Standard_D4s_v3
-    - D = famille general purpose
-    - 4 = vcpu count
-    - s = premium storage
-    - v3 = version
-
-    Ratios RAM/vCPU par famille :
-    - D, A, B(ms) → 4 GB/vCPU
-    - E, M        → 8 GB/vCPU
-    - F           → 2 GB/vCPU
-    - L           → 8 GB/vCPU (storage optimized)
-    - H           → 8 GB/vCPU (HPC)
+    Priorité 1 : table manuelle pour les séries ambiguës (D11, D12...)
+    Priorité 2 : regex sur le premier nombre + ratio RAM/vCPU par famille
     """
+    # Priorité 1 — specs manuelles vérifiées
+    if arm_sku in MANUAL_SPECS:
+        return MANUAL_SPECS[arm_sku]
+
     name = arm_sku.replace("Standard_", "")
 
-    # Extrait le nombre de vCPUs — premier nombre dans le nom
+    # Extrait le premier nombre — c'est le vcpu count pour les séries standard
     vcpu_match = re.search(r"(\d+)", name)
     if not vcpu_match:
         return None
@@ -85,9 +92,7 @@ def parse_specs_from_sku(arm_sku: str) -> dict | None:
     if vcpu == 0 or vcpu > 512:
         return None
 
-    # Identifie la famille depuis la première lettre
     family_letter = name[0].upper()
-
     ram_ratios = {
         "D": 4, "A": 4, "B": 4,
         "E": 8, "M": 8, "L": 8, "H": 8,
@@ -98,7 +103,6 @@ def parse_specs_from_sku(arm_sku: str) -> dict | None:
     memory_gb = float(vcpu * ratio)
 
     return {"vcpu": vcpu, "memory_gb": memory_gb}
-
 
 def extract_instances(items: list) -> list[dict]:
     rows = []
