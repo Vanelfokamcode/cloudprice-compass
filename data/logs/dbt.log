@@ -1,0 +1,32 @@
+[0m01:24:48.147102 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07d495550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07f6fd040>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07d28b0b0>]}
+
+
+============================== 01:24:48.152926 | f1c7cea4-7544-4828-8f82-8741df310d5e ==============================
+[0m01:24:48.152926 [info ] [MainThread]: Running with dbt=1.11.8
+[0m01:24:48.153541 [debug] [MainThread]: running dbt with arguments {'send_anonymous_usage_stats': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'use_experimental_parser': 'False', 'printer_width': '80', 'quiet': 'False', 'cache_selected_only': 'False', 'warn_error': 'None', 'indirect_selection': 'eager', 'debug': 'False', 'partial_parse': 'True', 'write_json': 'True', 'use_colors': 'True', 'log_path': 'logs', 'static_parser': 'True', 'empty': 'False', 'no_print': 'None', 'fail_fast': 'False', 'version_check': 'True', 'target_path': 'None', 'invocation_command': 'dbt run', 'profiles_dir': '/home/vanel/.dbt', 'introspect': 'True', 'log_format': 'default'}
+[0m01:24:48.154066 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /home/vanel/cloudprice-compass/data/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m01:24:48.156232 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.0754689, "process_in_blocks": "70336", "process_kernel_time": 0.296983, "process_mem_max_rss": "102560", "process_out_blocks": "8", "process_user_time": 1.751175}
+[0m01:24:48.156831 [debug] [MainThread]: Command `dbt run` failed at 01:24:48.156717 after 0.08 seconds
+[0m01:24:48.157247 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07d495550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07ccfe120>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7fa07d408bf0>]}
+[0m01:24:48.157688 [debug] [MainThread]: Flushing usage events
+[0m01:24:48.633107 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m01:25:17.903302 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f1452095c70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f1452072030>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f14520dddf0>]}
+
+
+============================== 01:25:17.906689 | 29619921-b990-43cf-bf51-f9c3923e44ba ==============================
+[0m01:25:17.906689 [info ] [MainThread]: Running with dbt=1.11.8
+[0m01:25:17.907532 [debug] [MainThread]: running dbt with arguments {'indirect_selection': 'eager', 'introspect': 'True', 'use_experimental_parser': 'False', 'invocation_command': 'dbt run', 'use_colors': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'cache_selected_only': 'False', 'log_format': 'default', 'fail_fast': 'False', 'quiet': 'False', 'empty': 'False', 'log_cache_events': 'False', 'write_json': 'True', 'static_parser': 'True', 'target_path': 'None', 'send_anonymous_usage_stats': 'True', 'log_path': 'logs', 'no_print': 'None', 'version_check': 'True', 'profiles_dir': '/home/vanel/.dbt', 'printer_width': '80', 'partial_parse': 'True', 'debug': 'False', 'warn_error': 'None'}
+[0m01:25:17.908156 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /home/vanel/cloudprice-compass/data/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m01:25:17.909234 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.06842948, "process_in_blocks": "0", "process_kernel_time": 0.149613, "process_mem_max_rss": "102696", "process_out_blocks": "8", "process_user_time": 1.456234}
+[0m01:25:17.909848 [debug] [MainThread]: Command `dbt run` failed at 01:25:17.909684 after 0.07 seconds
+[0m01:25:17.910295 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f1451dd8bc0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f14516e1b80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f1451bd5d30>]}
+[0m01:25:17.910732 [debug] [MainThread]: Flushing usage events
+[0m01:25:18.347507 [debug] [MainThread]: An error was encountered while trying to flush usage events
