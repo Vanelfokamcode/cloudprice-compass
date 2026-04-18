@@ -616,7 +616,9 @@
 </div>
 
 <script>
-const API = 'window.location.origin';
+const API = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000' 
+  : window.location.origin;
 const activeProviders = new Set(['aws','gcp','azure']);
 const compareSet = new Map(); // id → {instance_type, provider}
 
