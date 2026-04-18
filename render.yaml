@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cloudprice-compass
+    runtime: python
+    buildCommand: pip install -r requirements.txt && pip install dbt-duckdb
+    startCommand: bash start.sh
+    envVars:
+      - key: GCP_API_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.0
